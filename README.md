@@ -90,12 +90,9 @@ lb: Buoyant unit weight for submerged slopes(kN/m<sup>3</sup>or pcf)<br />
 #### Contributions are welcome! Please feel free to submit a pull request.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
-Name: [Piyush Jangid]<br />
-Email: [xyz@gmail.com]<br />
-GitHub: yourusername
+
 =======
 # Slope-Stability
 >>>>>>> origin/main
