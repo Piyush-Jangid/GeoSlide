@@ -39,12 +39,73 @@ def INFINITE_SLOPE_DET_FOR_PROB(beta,theeta,H,c,phi,cdash,phdash,l,lw,X,T):
     pass
 
 def INFINITE_SLOPE_PROB(beta,theeta,H,c,phi,cdash,phdash,l,lw,X,T,num_simulations=10000):
+    INFINITE_SLOPE_DET(beta,theeta,H,c[0],phi[0],cdash[0],phdash[0],l[0],lw,X,T)
     c_samples = generate_samples(*c, num_simulations)
     phi_samples = generate_samples(*phi, num_simulations)
     cdash_samples = generate_samples(*cdash, num_simulations)
     phdash_samples = generate_samples(*phdash, num_simulations)
     l_samples = generate_samples(*l,num_simulations)
     
+    
+    plt.figure(figsize=(10, 8))
+    if(cdash[0]==0):
+        # First subplot
+        plt.subplot(3, 1, 1)  # (rows, columns, index)
+        plt.hist(c_samples, bins=50, edgecolor='k', alpha=0.7)
+        plt.title('Distribution of Cohesion')
+        plt.xlabel('Cohesion')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Second subplot
+        plt.subplot(3, 1, 2)
+        plt.hist(phi_samples, bins=50, edgecolor='k', alpha=0.7)
+        plt.title('Distribution of Friction Angle')
+        plt.xlabel('Friction Angle')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Third subplot
+        plt.subplot(3, 1, 3)
+        plt.hist(l_samples, bins=50, edgecolor='k', alpha=0.7)
+        plt.title('Distribution of Unit weight of soil')
+        plt.xlabel('Unit weight of soil')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Adjust layout to prevent overlap
+        plt.tight_layout()
+        # plt.show()
+    else:
+        # First subplot
+        plt.subplot(3, 1, 1)  # (rows, columns, index)
+        plt.hist(cdash_samples, bins=50, edgecolor='k', alpha=0.7)
+        plt.title('Distribution of Effective stress Cohesion')
+        plt.xlabel('Cohesion')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Second subplot
+        plt.subplot(3, 1, 2)
+        plt.hist(phdash_samples, bins=50, edgecolor='k', alpha=0.7)
+        plt.title('Distribution of Effective stress Friction Angle')
+        plt.xlabel('Friction Angle')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Third subplot
+        plt.subplot(3, 1, 3)
+        plt.hist(l_samples, bins=50, edgecolor='k', alpha=0.7)
+        plt.title('Distribution of Unit weight of soil')
+        plt.xlabel('Unit weight of soil')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Adjust layout to prevent overlap
+        plt.tight_layout()
+        # plt.show()      
+        
+
     mean_beta,std_beta=beta,0
     mean_theeta,std_theeta=theeta,0
     mean_H, std_H = H, 0
@@ -69,7 +130,7 @@ def INFINITE_SLOPE_PROB(beta,theeta,H,c,phi,cdash,phdash,l,lw,X,T,num_simulation
     # Plot the distribution of FOS
     plt.figure(figsize=(10, 6))
     plt.hist(Fos_values, bins=50, edgecolor='k', alpha=0.7)
-    plt.title('Distribution of Factor of Safety (FoS) Infinite slope')
+    plt.title('Distribution of Factor of Safety')
     plt.xlabel('Factor of Safety')
     plt.ylabel('Frequency')
     plt.grid(True)
@@ -84,10 +145,10 @@ def INFINITE_SLOPE_PROB(beta,theeta,H,c,phi,cdash,phdash,l,lw,X,T,num_simulation
     fos_range = bin_edges[:-1]
     # Plot the probability of failure vs FOS
     plt.figure(figsize=(10, 6))
-    plt.plot(fos_range, prob_of_failure, label='Probability of Failure', color='red')
+    plt.plot(fos_range, prob_of_failure, label='Probability of Failure', color='red',linewidth=3)
     plt.xlabel('Factor of Safety')
     plt.ylabel('Probability of Failure')
-    plt.title('Probability of Failure vs Factor of Safety for c-phi soil')
+    plt.title('Probability of Failure vs Factor of Safety')
     plt.grid(True)
     plt.legend()
     plt.show()

@@ -31,9 +31,10 @@ def PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_DET(beta,H,H0,Cb,l,lb):
     N = getFromDict(m_dict,M,beta)
     # print(N)
     FOS = N*(Cb/(lb*(H+H0)))# For submerge slope
-    print('Factor of safety for Phi=0,Increasing Shear Strength: ',FOS)#1.36
+    print('Factor of safety for Phi=0 with increasing Shear Strength: ',FOS)#1.36
     return FOS
     pass
+
 
 def PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_DET_FOR_PROB(beta,H,H0,Cb,l,lb):
     M=H0/H
@@ -44,6 +45,7 @@ def PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_DET_FOR_PROB(beta,H,H0,C
     pass
 
 def PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_PROB(beta,H,H0,cb,l,lb,num_simulations=10000):
+    PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_DET(beta,H,H0,cb[0],l[0],lb[0])
     cb_samples = generate_samples(*cb, num_simulations)
     l_samples = generate_samples(*l,num_simulations)
     lb_samples = generate_samples(*lb,num_simulations)
@@ -63,14 +65,43 @@ def PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_PROB(beta,H,H0,cb,l,lb,n
         Fos_values.append(fos_values)
     Fos_values.sort()
     Fos_values=np.array(Fos_values)
+
+        # Create a figure
+    plt.figure(figsize=(10, 6))
+
+    # First subplot
+    plt.subplot(3, 1, 1)  # (rows, columns, index)
+    plt.hist(cb_samples, bins=50, edgecolor='k', alpha=0.7)
+    plt.title('Distribution of cb')
+    plt.xlabel('Cohesion')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+
+    # Second subplot
+    plt.subplot(3, 1, 2)
+    plt.hist(l_samples, bins=50, edgecolor='k', alpha=0.7)
+    plt.title('Distribution of Unit weight')
+    plt.xlabel('Unit weight')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+
+    # Third subplot
+    plt.subplot(3, 1, 3)
+    plt.hist(lb_samples, bins=50, edgecolor='k', alpha=0.7)
+    plt.title('Distribution of buoyant Unit weight of soil')
+    plt.xlabel('Buoyant unit weight of soil')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.tight_layout()
+
     # Plot the distribution of FOS
     plt.figure(figsize=(10, 6))
     plt.hist(Fos_values, bins=50, edgecolor='k', alpha=0.7)
-    plt.title('Distribution of Factor of Safety (FoS) Infinite slope')
+    plt.title('Distribution of Factor of Safety')
     plt.xlabel('Factor of Safety')
     plt.ylabel('Frequency')
     plt.grid(True)
-    
+
     #Determining Probability of failure vs FOS graph
     hist, bin_edges = np.histogram(Fos_values, bins=50, density=True)
     # Compute the CDF from the histogram
@@ -80,10 +111,10 @@ def PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_PROB(beta,H,H0,cb,l,lb,n
     fos_range = bin_edges[:-1]
     # Plot the probability of failure vs FOS
     plt.figure(figsize=(10, 6))
-    plt.plot(fos_range, prob_of_failure, label='Probability of Failure', color='red')
+    plt.plot(fos_range, prob_of_failure, label='Probability of Failure', color='red',linewidth=3)
     plt.xlabel('Factor of Safety')
     plt.ylabel('Probability of Failure')
-    plt.title('Probability of Failure vs Factor of Safety for c-phi soil')
+    plt.title('Probability of Failure vs Factor of Safety')
     plt.grid(True)
     plt.legend()
     plt.show()

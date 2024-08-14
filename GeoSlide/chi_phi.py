@@ -3,6 +3,7 @@ import numpy as np
 
 from .utills import getFromDict,getDataFromExcel,generate_samples,DrawSolution
 from .adjustment_factor import getSurchargeFactor,getSubmergenceAndSeepageFactor,getSteadySeepageFactor,getTensionCrackFactor
+from .nonhomogenous import HOMO
 
 file_path='PHI,C.xlsx'
 lcf0 = getDataFromExcel(file_path,'lcf=0')
@@ -74,8 +75,46 @@ ylcf_dict={
     20:ylcf20,
     100:ylcf100,
 }
-def CHI_PHI_SOIL_DET(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht):
-    D=0
+
+def CHI_PHI_SOIL_DET(beta,H,Hw,Hc,Hwdash,D,lw,q,Ht,layers):
+    c,phi,l=HOMO(beta,H,Hw,Hc,Hwdash,lw,q,Ht,layers)
+    # D=0
+    c=c[0]
+    phi=phi[0]
+    l=l[0]
+    uq = getSurchargeFactor(q,l,H,beta,D,1)# Surcharge adjustment factor
+    uw,uwdash = getSubmergenceAndSeepageFactor(Hw,Hwdash,H,beta,D,1) # Submergence and seepage adjustment factor
+    ut = getTensionCrackFactor(Ht,H,beta,D,1)  # Tension Crack adjustment factor
+
+    Pd = ((l*H+q)-(lw*Hw))/(uq*uw*ut)
+    if Hc!=0:
+        Hwdash,uwdash=getSteadySeepageFactor(Hc,H,beta,0,1)
+
+    Pe = ((l*H+q)-(lw*Hwdash))/(uq*uwdash)
+    lcf=Pe*(np.tan(np.radians(phi))/c)
+
+    Ncf=getFromDict(lcf_dict,lcf,1/np.tan(np.radians(beta)))
+    # print(Ncf)
+    FOS = Ncf*(c/Pd)
+    print('Factor of safety For c-phi: ',FOS)#1
+    x0=H*getFromDict(xlcf_dict,lcf,1/np.tan(np.radians(beta)))
+    y0=H*getFromDict(ylcf_dict,lcf,1/np.tan(np.radians(beta)))
+    print('x0 = ',x0)
+    print('y0 = ',y0)
+#     FailureCircle(x0,y0,0,H,beta,1)
+    DrawSolution(x0_list=[x0],y0_list=[y0],D_list=[D],H=H,beta=beta,T_list=[1],q=q,Hw=Hw,Hwdash=Hwdash,fos_values=[FOS])
+    R= np.sqrt(x0*x0+y0*y0)
+    print('Radius of slip circle = ',R)
+    print('Toe Circle')
+    return [FOS,x0,y0,R,D,1]
+    pass
+
+def CHI_PHI_SOIL_DET_EXT(beta,H,Hw,Hc,Hwdash,D,lw,q,Ht,layers):
+    c,phi,l=HOMO(beta,H,Hw,Hc,Hwdash,lw,q,Ht,layers)
+    # D=0
+    c=c[0]
+    phi=phi[0]
+    l=l[0]
     uq = getSurchargeFactor(q,l,H,beta,D,1)# Surcharge adjustment factor
     uw,uwdash = getSubmergenceAndSeepageFactor(Hw,Hwdash,H,beta,D,1) # Submergence and seepage adjustment factor
     ut = getTensionCrackFactor(Ht,H,beta,D,1)  # Tension Crack adjustment factor
@@ -89,21 +128,23 @@ def CHI_PHI_SOIL_DET(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht):
 
     Ncf=getFromDict(lcf_dict,lcf,1/np.tan(np.radians(beta)))
     FOS = Ncf*(c/Pd)
-    print('Factor of safety For phi>0 and c>0: ',FOS)#1
+    print('Deterministic solution for zero standard deviation->')
+    print('Factor of safety For c-phi: ',FOS)#1
     x0=H*getFromDict(xlcf_dict,lcf,1/np.tan(np.radians(beta)))
     y0=H*getFromDict(ylcf_dict,lcf,1/np.tan(np.radians(beta)))
     print('x0 = ',x0)
     print('y0 = ',y0)
 #     FailureCircle(x0,y0,0,H,beta,1)
-    DrawSolution(x0_list=[x0],y0_list=[y0],D_list=[0],H=H,beta=beta,T_list=[1],q=q,Hw=Hw,Hwdash=Hwdash,fos_values=[FOS])
+    # DrawSolution(x0_list=[x0],y0_list=[y0],D_list=[0],H=H,beta=beta,T_list=[1],q=q,Hw=Hw,Hwdash=Hwdash,fos_values=[FOS])
     R= np.sqrt(x0*x0+y0*y0)
     print('Radius of slip circle = ',R)
     print('Toe Circle')
-    return [FOS,x0,y0,R,0,1]
+    return [FOS,x0,y0,R,D,1]
     pass
 
-def CHI_PHI_SOIL_DET_FOR_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht):
-    D=0
+
+def CHI_PHI_SOIL_MID(beta,H,Hw,Hc,Hwdash,D,c,phi,l,lw,q,Ht):
+    # D=0  
     uq = getSurchargeFactor(q,l,H,beta,D,1)# Surcharge adjustment factor
     uw,uwdash = getSubmergenceAndSeepageFactor(Hw,Hwdash,H,beta,D,1) # Submergence and seepage adjustment factor
     ut = getTensionCrackFactor(Ht,H,beta,D,1)  # Tension Crack adjustment factor
@@ -121,12 +162,41 @@ def CHI_PHI_SOIL_DET_FOR_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht):
     x0=H*getFromDict(xlcf_dict,lcf,1/np.tan(np.radians(beta)))
     y0=H*getFromDict(ylcf_dict,lcf,1/np.tan(np.radians(beta)))
     R= np.sqrt(x0*x0+y0*y0)
-    return [FOS,x0,y0,R,0,1]
+    return [FOS,x0,y0,R,D,1]
+    pass
+
+def CHI_PHI_SOIL_DET_FOR_PROB(beta,H,Hw,Hc,Hwdash,D,lw,q,Ht,layers):
+    # D=0
+    c,phi,l=HOMO(beta,H,Hw,Hc,Hwdash,lw,q,Ht,layers)
+    # D=0
+    c=c[0]
+    phi=phi[0]
+    l=l[0]    
+    uq = getSurchargeFactor(q,l,H,beta,D,1)# Surcharge adjustment factor
+    uw,uwdash = getSubmergenceAndSeepageFactor(Hw,Hwdash,H,beta,D,1) # Submergence and seepage adjustment factor
+    ut = getTensionCrackFactor(Ht,H,beta,D,1)  # Tension Crack adjustment factor
+
+    Pd = ((l*H+q)-(lw*Hw))/(uq*uw*ut)
+    if Hc!=0:
+        Hwdash,uwdash=getSteadySeepageFactor(Hc,H,beta,0,1)
+
+    Pe = ((l*H+q)-(lw*Hwdash))/(uq*uwdash)
+    lcf=Pe*(np.tan(np.radians(phi))/c)
+
+    Ncf=getFromDict(lcf_dict,lcf,1/np.tan(np.radians(beta)))
+    FOS = Ncf*(c/Pd)
+    
+    x0=H*getFromDict(xlcf_dict,lcf,1/np.tan(np.radians(beta)))
+    y0=H*getFromDict(ylcf_dict,lcf,1/np.tan(np.radians(beta)))
+    R= np.sqrt(x0*x0+y0*y0)
+    return [FOS,x0,y0,R,D,1]
     pass
 
 # CHI_PHI_SOIL_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht,num_simulations)
-def CHI_PHI_SOIL_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht,num_simulations=1000):
-    D=0
+def CHI_PHI_SOIL_PROB(beta,H,Hw,Hc,Hwdash,D,lw,q,Ht,layers,num_simulations=1000):
+    CHI_PHI_SOIL_DET_EXT(beta,H,Hw,Hc,Hwdash,D,lw,q,Ht,layers)
+    # D=0
+    c,phi,l=HOMO(beta,H,Hw,Hc,Hwdash,lw,q,Ht,layers)
     c_samples = generate_samples(*c, num_simulations)
     phi_samples = generate_samples(*phi, num_simulations)
     l_samples = generate_samples(*l, num_simulations)
@@ -160,7 +230,7 @@ def CHI_PHI_SOIL_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht,num_simulations=1000):
     
     # Calculate FOS for each set of random samples
     for i in range(num_simulations):                                                      #beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht
-        fos_values, x0_val, y0_val,R_val,D_val,type_val = CHI_PHI_SOIL_DET_FOR_PROB(beta_samples[i], H_samples[i], Hw_samples[i],Hc_samples[i], Hwdash_samples[i],c_samples[i],phi_samples[i], l_samples[i] ,lw_samples[i],q_samples[i], Ht_samples[i])
+        fos_values, x0_val, y0_val,R_val,D_val,type_val = CHI_PHI_SOIL_MID(beta_samples[i], H_samples[i], Hw_samples[i],Hc_samples[i], Hwdash_samples[i],D_samples[i],c_samples[i],phi_samples[i], l_samples[i] ,lw_samples[i],q_samples[i], Ht_samples[i])
         Fos_values.append(fos_values)
         x0_values.append(x0_val)
         y0_values.append(y0_val)
@@ -194,10 +264,41 @@ def CHI_PHI_SOIL_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht,num_simulations=1000):
     
     DrawSolution(x0_values,y0_values,D_values,H,beta,type_values,q,Hw,Hwdash,Fos_values)
     
+    # Create a figure
+    plt.figure(figsize=(10, 8))
+
+    # First subplot
+    plt.subplot(3, 1, 1)  # (rows, columns, index)
+    plt.hist(c_samples, bins=50, edgecolor='k', alpha=0.7)
+    plt.title('Distribution of Cohesion')
+    plt.xlabel('Cohesion')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+
+    # Second subplot
+    plt.subplot(3, 1, 2)
+    plt.hist(phi_samples, bins=50, edgecolor='k', alpha=0.7)
+    plt.title('Distribution of Friction Angle')
+    plt.xlabel('Friction Angle')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+
+    # Third subplot
+    plt.subplot(3, 1, 3)
+    plt.hist(l_samples, bins=50, edgecolor='k', alpha=0.7)
+    plt.title('Distribution of Unit weight of soil')
+    plt.xlabel('Unit weight of soil')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+    # plt.show()
+
     # Plot the distribution of FOS
     plt.figure(figsize=(10, 6))
     plt.hist(Fos_values, bins=50, edgecolor='k', alpha=0.7)
-    plt.title('Distribution of Factor of Safety (FoS) for c-phi soil')
+    plt.title('Distribution of Factor of Safety (FoS)')
     plt.xlabel('Factor of Safety')
     plt.ylabel('Frequency')
     plt.grid(True)
@@ -212,11 +313,12 @@ def CHI_PHI_SOIL_PROB(beta,H,Hw,Hc,Hwdash,c,phi,l,lw,q,Ht,num_simulations=1000):
     fos_range = bin_edges[:-1]
     # Plot the probability of failure vs FOS
     plt.figure(figsize=(10, 6))
-    plt.plot(fos_range, prob_of_failure, label='Probability of Failure', color='red')
+    plt.plot(fos_range, prob_of_failure, label='Probability of Failure', color='red',linewidth=3)
     plt.xlabel('Factor of Safety')
     plt.ylabel('Probability of Failure')
-    plt.title('Probability of Failure vs Factor of Safety for c-phi soil')
+    plt.title('Probability of Failure vs Factor of Safety')
     plt.grid(True)
     plt.legend()
     plt.show()
+    return Fos_values
     pass
