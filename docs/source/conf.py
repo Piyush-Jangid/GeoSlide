@@ -4,7 +4,7 @@
 
 project = 'GeoSlide'
 copyright = '2024, sksinha'
-author = 'sksinha'
+author = 'S K Sinha, Piyush Jangid'
 
 release = '0.1'
 version = '0.1.0'
