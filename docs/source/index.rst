@@ -18,5 +18,8 @@ Contents
 
 .. toctree::
 
-   usage
-   api
+   installation
+   slope_stability_analysis
+   using_geoSlope
+   examples
+

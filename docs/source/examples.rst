@@ -1,7 +1,7 @@
-API
-===
+Examples
+========
 
 .. autosummary::
    :toctree: generated
 
-   GeoSlide
+   Examples

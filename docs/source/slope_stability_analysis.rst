@@ -1,9 +1,9 @@
-Usage
+Slope Stability Analysis
 =====
 
-.. _installation:
+.. _slope_stability_analysis:
 
-Installation
+Introduction
 ------------
 
 To use GeoSlide, first install it using pip:
@@ -12,7 +12,7 @@ To use GeoSlide, first install it using pip:
 
    (.venv) $ pip install geoslide
 
-Creating recipes
+Slope Stability
 ----------------
 
 To retrieve a list of random ingredients,
