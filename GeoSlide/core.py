@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-from .phiz_increase import PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_DET,PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_PROB
-from .infinite import INFINITE_SLOPE_DET,INFINITE_SLOPE_PROB
-from .chi_phi import CHI_PHI_SOIL_DET,CHI_PHI_SOIL_PROB
-from .purely_cohesive import PURELY_COHESIVE_SOIL_DET,PURELY_COHESIVE_SOIL_PROB
+from .purely_cohesive_soil_with_increasing_shear_strength import PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_DET,PURELY_COHESIVE_SOIL_WITH_INCREASING_SHEAR_STRENGTH_PROB
+from .infinite_slope import INFINITE_SLOPE_DET,INFINITE_SLOPE_PROB
+from .c_phi_soil import CHI_PHI_SOIL_DET,CHI_PHI_SOIL_PROB
+from .purely_cohesive_soil import PURELY_COHESIVE_SOIL_DET,PURELY_COHESIVE_SOIL_PROB
 
 
 # def PURELY_COHESIVE_SOIL(beta,H,Hw,Hwdash,D,c,lw,l,Ht,q,str,num_simulations=10000):

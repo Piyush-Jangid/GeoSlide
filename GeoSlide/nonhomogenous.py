@@ -4,7 +4,7 @@ import math
 import numpy as np
 
 
-file_path='PHI,C.xlsx'
+file_path='Stability Number for c-phi soil.xlsx'
 xlcf0=getDataFromExcel(file_path,'x_lcf=0')
 xlcf2=getDataFromExcel(file_path,'x_lcf=2')
 xlcf5=getDataFromExcel(file_path,'x_lcf=5')

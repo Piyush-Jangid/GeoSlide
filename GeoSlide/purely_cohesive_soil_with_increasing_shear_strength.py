@@ -3,7 +3,7 @@ import numpy as np
 
 from .utills import getFromDict,getDataFromExcel,generate_samples
 
-file_path='Phi_0_Increasing_shear_strength.xlsx'
+file_path='Stability Number for Phi=0 with Increasing shear strength.xlsx'
 m0 = getDataFromExcel(file_path,'m=0')
 m25= getDataFromExcel(file_path,'m=0.25')
 m50= getDataFromExcel(file_path,'m=0.5')

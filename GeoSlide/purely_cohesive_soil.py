@@ -8,7 +8,7 @@ from .adjustment_factor import getSurchargeFactor,getSubmergenceAndSeepageFactor
 from .nonhomogenous import HOMO_iter
 # from .nonhomogenous import HOMO
 
-file_path='PHI=0.xlsx'
+file_path='Stability Number for PHI=0.xlsx'
 toe_circle = getDataFromExcel(file_path,'Toe_circle')
 d_0 = getDataFromExcel(file_path,'d=0')
 d_01 = getDataFromExcel(file_path,'d=0.1')

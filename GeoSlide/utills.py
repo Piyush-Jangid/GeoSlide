@@ -11,11 +11,10 @@ import pkg_resources
 import os
 
 def getDataFromExcel(file_name,sheet_name):
-    # DATA_FOLDER = os.path.join(os.path.dirname(__file__), 'Data')
-    
-    # file_path = os.path.join(DATA_FOLDER, file_name)
-    file_path = pkg_resources.resource_filename('SlopeStability', 'Data')
-    file_path = os.path.join(file_path,file_name)
+    DATA_FOLDER = os.path.join(os.path.dirname(__file__), 'Data')
+    file_path = os.path.join(DATA_FOLDER, file_name)
+    # file_path = pkg_resources.resource_filenme('GeoSlide', 'Data')
+    # file_path = os.path.join(file_path,file_name)
     # print(file_path)
     wb = load_workbook(filename=file_path)
     sheet = wb[sheet_name]

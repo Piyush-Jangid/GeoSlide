@@ -6,44 +6,44 @@ plt.style.use('Rplot')
 plt.rcParams['mathtext.cal'] = 'serif'
 
 # #(1) Phi=0 Soil
-layers=[
-    {'cohesion': [600,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [120,0.2,'normal'], 'thickness': 12},
-    {'cohesion': [400,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [100,0.2,'normal'], 'thickness': 12},
-    {'cohesion': [500,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [105,0.2,'normal'], 'thickness': 12},
-]
-solve('phi=0',params={'beta':50,
-                            'H':24,
-                            'Hw':8,
-                            'Hwdash':8,
-                            'D':12,
-                            'lw':62.4,
-                            'Ht':8,
-                            'q':22,
-                            },
-                            str='probabilistic',
-                            layers=layers,
-                            num_simulations=1000)
-
-# # (2) c-phi Soil
 # layers=[
-#     {'cohesion': [800,0.2,'normal'], 'friction_angle': [8,0.2,'normal'], 'unit_weight': [115,0.2,'normal'], 'thickness': 20},
-#     {'cohesion': [600,0.2,'normal'], 'friction_angle': [6,0.2,'normal'], 'unit_weight': [110,0.2,'normal'], 'thickness': 20},
-#     {'cohesion': [800,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [120,0.2,'normal'], 'thickness': 20},
+#     {'cohesion': [600,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [120,0.2,'normal'], 'thickness': 12},
+#     {'cohesion': [400,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [100,0.2,'normal'], 'thickness': 12},
+#     {'cohesion': [500,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [105,0.2,'normal'], 'thickness': 12},
 # ]
-
-# solve('c-phi',params={'beta':33.69,
-#                             'H':40,
-#                             'Hw':10,
-#                             'Hc':0,
-#                             'Hwdash':25,
-#                             'D':20,
+# solve('phi=0',params={'beta':50,
+#                             'H':24,
+#                             'Hw':8,
+#                             'Hwdash':8,
+#                             'D':12,
 #                             'lw':62.4,
-#                             'Ht':5,
-#                             'q':220,
+#                             'Ht':8,
+#                             'q':22,
 #                             },
 #                             str='probabilistic',
 #                             layers=layers,
 #                             num_simulations=1000)
+
+# # (2) c-phi Soil
+layers=[
+    {'cohesion': [800,0.2,'normal'], 'friction_angle': [8,0.2,'normal'], 'unit_weight': [115,0.2,'normal'], 'thickness': 20},
+    {'cohesion': [600,0.2,'normal'], 'friction_angle': [6,0.2,'normal'], 'unit_weight': [110,0.2,'normal'], 'thickness': 20},
+    {'cohesion': [800,0.2,'normal'], 'friction_angle': [0,0.2,'normal'], 'unit_weight': [120,0.2,'normal'], 'thickness': 20},
+]
+
+solve('c-phi',params={'beta':33.69,
+                            'H':40,
+                            'Hw':10,
+                            'Hc':0,
+                            'Hwdash':25,
+                            'D':20,
+                            'lw':62.4,
+                            'Ht':0,
+                            'q':220,
+                            },
+                            str='probabilistic',
+                            layers=layers,
+                            num_simulations=1000)
 
 # #(3)Infinite slope
 # solve('infinite-slope',params={

@@ -5,7 +5,7 @@ from .utills import getFromDict,getDataFromExcel,generate_samples,DrawSolution
 from .adjustment_factor import getSurchargeFactor,getSubmergenceAndSeepageFactor,getSteadySeepageFactor,getTensionCrackFactor
 from .nonhomogenous import HOMO
 
-file_path='PHI,C.xlsx'
+file_path='Stability Number for c-phi soil.xlsx'
 lcf0 = getDataFromExcel(file_path,'lcf=0')
 lcf05 = getDataFromExcel(file_path,'lcf=0.5')
 lcf1 = getDataFromExcel(file_path,'lcf=1')

@@ -3,7 +3,7 @@ import numpy as np
 
 from .utills import getFromDict,getDataFromExcel,generate_samples,interpolate_2d_array
 
-file_path='B.xlsx'
+file_path='Constant B for Infinite Slope.xlsx'
 Bru = getDataFromExcel(file_path,'B')
 
 def INFINITE_SLOPE_DET(beta,theeta,H,c,phi,cdash,phdash,l,lw,X,T):
